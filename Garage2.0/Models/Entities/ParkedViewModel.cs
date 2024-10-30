@@ -5,6 +5,6 @@
         public int Id { get; set; }
         public VehicleType Type { get; set; }
         public string RegistrationNumber { get; set; }
-        public TimeOnly ArrivalTime { get; set; }
+        public DateTime ArrivalTime { get; set; }
     }
 }

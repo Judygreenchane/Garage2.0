@@ -26,6 +26,20 @@ namespace Garage2._0.Controllers
         //    return View(await _context.ParkedVehicle.ToListAsync());
         //}
 
+        public async Task<IActionResult> ParkedViewModel()
+        {
+            var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
+            {
+                Id = p.Id,
+                Type = p.VehicleType,
+                RegistrationNumber = p.RegistrationNumber,
+                ArrivalTime = p.ArrivalTime
+
+            });
+
+            return View(await model.ToListAsync());
+        }
+
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
