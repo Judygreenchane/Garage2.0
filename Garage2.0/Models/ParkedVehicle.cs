@@ -1,9 +1,11 @@
-﻿namespace Garage2._0.Models
+﻿using Garage2._0.Models.Entities;
+
+namespace Garage2._0.Models
 {
     public class ParkedVehicle
     {
         public int Id { get; set; }
-        public string VehicleType { get; set; }
+        public VehicleType VehicleType { get; set; }
         public string RegistrationNumber { get; set; }
         public string Color { get; set; }
         public string Brand { get; set; }
