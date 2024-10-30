@@ -14,6 +14,7 @@ namespace Garage2._0.Controllers
     public class ParkedVehiclesController : Controller
     {
         private readonly Garage2_0Context _context;
+        private DateTime DateTime { get; set; }
 
         public ParkedVehiclesController(Garage2_0Context context)
         {
@@ -24,6 +25,20 @@ namespace Garage2._0.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.ParkedVehicle.ToListAsync());
+        }
+
+        public async Task<IActionResult> ParkedViewModel()
+        {
+            var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
+            {
+                Id = p.Id,
+                Type = p.VehicleType,
+                RegistrationNumber = p.RegistrationNumber,
+                ArrivalTime = p.ArrivalTime
+
+            });
+
+            return View(await model.ToListAsync());
         }
 
         // GET: ParkedVehicles/Details/5
