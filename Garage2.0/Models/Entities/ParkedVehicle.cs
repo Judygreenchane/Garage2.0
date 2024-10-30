@@ -1,6 +1,4 @@
-﻿using Garage2._0.Models.Entities;
-
-namespace Garage2._0.Models
+﻿namespace Garage2._0.Models.Entities
 {
     public class ParkedVehicle
     {
@@ -12,6 +10,5 @@ namespace Garage2._0.Models
         public string? VehicleModel { get; set; }
         public int Wheel { get; set; }
         public DateTime ArrivalTime { get; set; }
-
     }
 }

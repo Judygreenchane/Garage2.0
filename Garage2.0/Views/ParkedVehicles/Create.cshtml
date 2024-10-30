@@ -1,4 +1,4 @@
-﻿@model Garage2._0.Models.ParkedVehicle
+﻿@model Garage2._0.Models.Entities.ParkedVehicle
 
 @{
     ViewData["Title"] = "Create";
@@ -14,7 +14,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="VehicleType" class="control-label"></label>
-                <select asp-for="VehicleType" class="form-control"></select>
+                <select asp-for="VehicleType" class="form-control" asp-items="@Html.GetEnumSelectList<VehicleType>()">
+                    <option selected="selected" value="">Please select</option>
+                </select>
+
                 <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
             <div class="form-group">

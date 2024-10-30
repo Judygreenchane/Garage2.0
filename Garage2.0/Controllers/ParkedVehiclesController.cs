@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
+using Garage2._0.Models.Entities;
 
 namespace Garage2._0.Controllers
 {

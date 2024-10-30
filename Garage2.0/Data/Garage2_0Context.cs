@@ -14,6 +14,6 @@ namespace Garage2._0.Data
         {
         }
 
-        public DbSet<Garage2._0.Models.ParkedVehicle> ParkedVehicle { get; set; } = default!;
+        public DbSet<Garage2._0.Models.Entities.ParkedVehicle> ParkedVehicle { get; set; } = default!;
     }
 }
