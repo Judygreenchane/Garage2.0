@@ -22,10 +22,10 @@ namespace Garage2._0.Controllers
         }
 
         // GET: ParkedVehicles
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.ParkedVehicle.ToListAsync());
-        //}
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.ParkedVehicle.ToListAsync());
+        }
 
         public async Task<IActionResult> ParkedViewModel()
         {
