@@ -31,6 +31,7 @@ namespace Garage2._0.Data
 
                 );
         }
+        public DbSet<Garage2._0.Models.Entities.ParkedViewModel> ParkedViewModel { get; set; } = default!;
 
     }
 }
