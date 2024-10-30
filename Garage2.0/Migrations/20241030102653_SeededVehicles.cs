@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Garage2._0.Migrations
 {
     /// <inheritdoc />
-    public partial class SeededVehicles : Migration
+    public partial class SeededVehicles : Migration 
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
