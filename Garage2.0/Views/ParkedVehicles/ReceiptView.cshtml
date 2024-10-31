@@ -33,21 +33,19 @@
             @Html.DisplayNameFor(model => model.ParkedTime)
         </dt>
         <dd class="col-sm-10">
-            @* @($"{Model.ParkedTime.Days} days {Model.ParkedTime.Hours} hours {Model.ParkedTime.Minutes} minutes") *@
             @ParkingHelper.FormatTimeSpan(Model.ParkedTime)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ParkedFee)
         </dt>
         <dd class = "col-sm-10">
-         @*    @Html.DisplayFor(model => model.ParkedFee) *@
             @($"{ParkingHelper.ParkingFee(Model.ArrivalTime, Model.DepartureTime)} SEK")
         </dd>
     </dl>
     
     <form asp-action="Delete" asp-controller="ParkedVehicles" method="post">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <input type="submit" value="Unpark" class="btn btn-danger" /> |
         <a asp-action="Index">Back to Vehicles</a>
     </form>
 </div>
