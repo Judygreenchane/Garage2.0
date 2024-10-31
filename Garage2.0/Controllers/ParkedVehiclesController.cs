@@ -36,7 +36,8 @@ namespace Garage2._0.Controllers
                 Id = p.Id,
                 Type = p.VehicleType,
                 RegistrationNumber = p.RegistrationNumber,
-                ArrivalTime = p.ArrivalTime
+                ArrivalTime = p.ArrivalTime,
+                ParkedTime = DateTime.Now - p.ArrivalTime
 
             });
 
