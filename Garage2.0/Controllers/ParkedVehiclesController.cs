@@ -10,6 +10,8 @@ using Garage2._0.Models;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Humanizer.Localisation;
+using Microsoft.Data.SqlClient;
 
 namespace Garage2._0.Controllers
 {
@@ -23,10 +25,60 @@ namespace Garage2._0.Controllers
             _context = context;
         }
 
-        // GET: ParkedVehicles
-        public async Task<IActionResult> Index()
+        //GET: ParkedVehicles
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return View(await _context.ParkedVehicle.ToListAsync());
+            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            var students = from s in _context.ParkedVehicle
+                           select s;
+            switch (sortOrder)
+            {
+                case "type":
+                    students = students.OrderByDescending(s => s.VehicleType);
+                    break;
+                case "Date":
+                    students = students.OrderByDescending(s => s.RegistrationNumber);
+                    break;
+                //case "date_desc":
+                //    students = students.OrderByDescending(s => s.EnrollmentDate);
+                //    break;
+                default:
+                    students = students.OrderBy(s => s.VehicleType);
+                    break;
+            }
+            return View(await students.ToListAsync());
+
+            //return View(await _context.ParkedVehicle.ToListAsync());
+        }
+
+        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
+        {
+            var filtered = type is null ?
+                _context.ParkedVehicle :
+                _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
+
+            filtered = string.IsNullOrWhiteSpace(regNr) ?
+                filtered :
+                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+
+            filtered = string.IsNullOrWhiteSpace(color) ?
+                filtered :
+                filtered.Where(m => m.Color.Contains(color));
+
+            filtered = string.IsNullOrWhiteSpace(brand) ?
+                filtered :
+                filtered.Where(m => m.Brand.Contains(brand));
+
+            filtered = string.IsNullOrWhiteSpace(model) ?
+                filtered :
+                filtered.Where(m => m.VehicleModel.Contains(model));
+
+            filtered = wheels is null ?
+                filtered :
+                filtered.Where(m => (int)m.Wheel == wheels);
+
+            return View(nameof(Index), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> ParkedViewModel()
@@ -83,6 +135,7 @@ namespace Garage2._0.Controllers
                     dateTime.Kind
                 );
                 parkedVehicle.ArrivalTime = dateTime;
+                parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
