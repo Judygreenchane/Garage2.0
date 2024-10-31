@@ -9,6 +9,7 @@ using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.Entities;
 using Humanizer.Localisation;
+using Microsoft.Data.SqlClient;
 
 namespace Garage2._0.Controllers
 {
@@ -23,9 +24,30 @@ namespace Garage2._0.Controllers
         }
 
         // GET: ParkedVehicles
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return View(await _context.ParkedVehicle.ToListAsync());
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            var students = from s in _context.ParkedVehicle
+                           select s;
+            switch (sortOrder)
+            {
+                case "type":
+                    students = students.OrderByDescending(s => s.VehicleType);
+                    break;
+                case "Date":
+                    students = students.OrderBy(s => s.RegistrationNumber);
+                    break;
+                //case "date_desc":
+                //    students = students.OrderByDescending(s => s.EnrollmentDate);
+                //    break;
+                default:
+                    students = students.OrderBy(s => s.VehicleType);
+                    break;
+            }
+            return View(await students.ToListAsync());
+
+            //return View(await _context.ParkedVehicle.ToListAsync());
         }
 
         public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
