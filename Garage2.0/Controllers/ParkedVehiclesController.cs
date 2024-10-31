@@ -74,7 +74,12 @@ namespace Garage2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-                parkedVehicle.ArrivalTime = DateTime.Now;
+                DateTime dateTime = DateTime.Now;
+                dateTime = new DateTime(
+                    dateTime.Ticks - (dateTime.Ticks % TimeSpan.TicksPerSecond),
+                    dateTime.Kind
+                );
+                parkedVehicle.ArrivalTime = dateTime;
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
