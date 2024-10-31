@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.Entities;
+using Garage2._0.Models.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
 
@@ -86,7 +88,8 @@ namespace Garage2._0.Controllers
                 Id = p.Id,
                 Type = p.VehicleType,
                 RegistrationNumber = p.RegistrationNumber,
-                ArrivalTime = p.ArrivalTime
+                ArrivalTime = p.ArrivalTime,
+                ParkedTime = DateTime.Now - p.ArrivalTime
 
             });
 
@@ -221,6 +224,35 @@ namespace Garage2._0.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: ParkedVehicles/Receipt/5
+        public async Task<IActionResult> ReceiptView(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parkedVehicle = await _context.ParkedVehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (parkedVehicle == null)
+            {
+                return NotFound();
+            }
+            
+            var model = new ReceiptViewModel{ 
+                Id=parkedVehicle.Id,
+                RegistrationNumber=parkedVehicle.RegistrationNumber,
+                ArrivalTime=parkedVehicle.ArrivalTime,
+                DepartureTime=DateTime.Now,
+                ParkedTime=(DateTime.Now-parkedVehicle.ArrivalTime),
+                ParkedFee= (decimal)((DateTime.Now - parkedVehicle.ArrivalTime).TotalMinutes * 0.5)
+
+            };
+
+            return View(model);
         }
 
         private bool ParkedVehicleExists(int id)

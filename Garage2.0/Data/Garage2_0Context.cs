@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Models;
 using Humanizer.Localisation;
 using Garage2._0.Models.Entities;
+using Garage2._0.Models.ViewModels;
 
 namespace Garage2._0.Data
 {
@@ -32,6 +33,7 @@ namespace Garage2._0.Data
                 );
         }
         public DbSet<Garage2._0.Models.Entities.ParkedViewModel> ParkedViewModel { get; set; } = default!;
+        public DbSet<Garage2._0.Models.ViewModels.ReceiptViewModel> ReceiptViewModel { get; set; } = default!;
 
     }
 }
