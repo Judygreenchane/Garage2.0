@@ -7,6 +7,6 @@
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
         public TimeSpan ParkedTime { get; set; } 
-        public decimal? ParkedFee { get; set; } //(DepartureTime-ArrivalTime).Minutes*Rate
+        public decimal? ParkedFee { get; set; } 
     }
 }
