@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.Entities;
+using Humanizer.Localisation;
 
 namespace Garage2._0.Controllers
 {
@@ -27,13 +28,33 @@ namespace Garage2._0.Controllers
             return View(await _context.ParkedVehicle.ToListAsync());
         }
 
-        public async Task<IActionResult> Filter(string regNr)
+        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
         {
-            var model = string.IsNullOrWhiteSpace(regNr) ?
+            var filtered = type is null ?
                 _context.ParkedVehicle :
-                _context.ParkedVehicle.Where(m => m.RegistrationNumber.Contains(regNr));
+                _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
 
-            return View(nameof(Index), await model.ToListAsync());
+            filtered = string.IsNullOrWhiteSpace(regNr) ?
+                filtered :
+                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+
+            filtered = string.IsNullOrWhiteSpace(color) ?
+                filtered :
+                filtered.Where(m => m.Color.Contains(color));
+
+            filtered = string.IsNullOrWhiteSpace(brand) ?
+                filtered :
+                filtered.Where(m => m.Brand.Contains(brand));
+
+            filtered = string.IsNullOrWhiteSpace(model) ?
+                filtered :
+                filtered.Where(m => m.VehicleModel.Contains(model));
+
+            filtered = wheels is null ?
+                filtered :
+                filtered.Where(m => (int)m.Wheel == wheels);
+
+            return View(nameof(Index), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> ParkedViewModel()

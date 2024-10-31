@@ -12,7 +12,16 @@
 
 <form asp-action="Filter" method="get">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" name="regNr" />
+        <div class="input-group-append">
+            <select class="form-control" name="type" asp-items="@Html.GetEnumSelectList<VehicleType>()">
+                <option selected="selected" value="">Any Vehicle</option>
+            </select>
+        </div>
+        <input type="text" class="form-control" name="regNr" placeholder="Registration number..." />
+        <input type="text" class="form-control" name="color" placeholder="Color..." />
+        <input type="text" class="form-control" name="brand" placeholder="Brand..." />
+        <input type="text" class="form-control" name="model" placeholder="Model..." />
+        <input type="number" min="0" class="form-control" name="wheels" placeholder="Wheels..." />
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
