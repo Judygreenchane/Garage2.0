@@ -32,24 +32,22 @@
     <thead>
         <tr>
             <th>
-                @* @Html.DisplayNameFor(model => model.VehicleType) *@
-                @Html.ActionLink("Vehicle Type", "Index", new { sortOrder = ViewBag.NameSortParm })
+                @Html.ActionLink("Vehicle Type", "Index", new { sortOrder = ViewBag.TypeSortParm })
             </th>
             <th>
-                @* @Html.DisplayNameFor(model => model.RegistrationNumber) *@
-                @Html.ActionLink("Registration Number", "Index", new { sortOrder = ViewBag.DateSortParam })
+                @Html.ActionLink("Registration Number", "Index", new { sortOrder = ViewBag.RegSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Color)
+                @Html.ActionLink("Color", "Index", new { sortOrder = ViewBag.ColorSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.ActionLink("Brand", "Index", new { sortOrder = ViewBag.BrandSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VehicleModel)
+                @Html.ActionLink("Model", "Index", new { sortOrder = ViewBag.ModelSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Wheel)
+                @Html.ActionLink("Wheels", "Index", new { sortOrder = ViewBag.WheelSortParm })
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ArrivalTime)
