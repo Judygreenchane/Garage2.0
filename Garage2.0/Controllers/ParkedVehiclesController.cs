@@ -222,8 +222,10 @@ namespace Garage2._0.Controllers
             {
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
-
+            
+            Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Product deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 
