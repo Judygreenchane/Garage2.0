@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Garage2._0.Data;
+using Garage2._0.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace Garage2._0.Models.Entities
 {
@@ -8,7 +10,9 @@ namespace Garage2._0.Models.Entities
         [Required] 
         public VehicleType VehicleType { get; set; }
         [Required]
-        [RegularExpression(@"^[A-Z]{3}[0-9]{3}$", ErrorMessage = "Registration number must follow the format ABC123.")]
+        [RegularExpression(@"^[A-Za-z]{3}[0-9]{3}$", ErrorMessage = "Registration number must follow the format ABC123.")]
+        [UniqueRegistrationNumber(typeof(Garage2_0Context), ErrorMessage = "Registration number must be unique.")]
+
         public string? RegistrationNumber { get; set; }
         [StringLength(20, MinimumLength = 2, ErrorMessage = "The field must be between 2 and 20 characters long.")]
         public string? Color { get; set; }
