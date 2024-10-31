@@ -27,6 +27,15 @@ namespace Garage2._0.Controllers
             return View(await _context.ParkedVehicle.ToListAsync());
         }
 
+        public async Task<IActionResult> Filter(string regNr)
+        {
+            var model = string.IsNullOrWhiteSpace(regNr) ?
+                _context.ParkedVehicle :
+                _context.ParkedVehicle.Where(m => m.RegistrationNumber.Contains(regNr));
+
+            return View(nameof(Index), await model.ToListAsync());
+        }
+
         public async Task<IActionResult> ParkedViewModel()
         {
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
