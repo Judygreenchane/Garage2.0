@@ -12,13 +12,13 @@ using Garage2._0.Models.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
+using Garage2._0.Helper;
 
 namespace Garage2._0.Controllers
 {
     public class ParkedVehiclesController : Controller
     {
         private readonly Garage2_0Context _context;
-        private DateTime DateTime { get; set; }
 
         public ParkedVehiclesController(Garage2_0Context context)
         {
@@ -28,26 +28,54 @@ namespace Garage2._0.Controllers
         //GET: ParkedVehicles
         public async Task<IActionResult> Index(string sortOrder)
         {
-            ViewBag.NameSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
-            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
-            var students = from s in _context.ParkedVehicle
+            ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
+            ViewBag.ColorSortParm = sortOrder == "color" ? "color_desc" : "color";
+            ViewBag.BrandSortParm = sortOrder == "brand" ? "brand_desc" : "brand";
+            ViewBag.ModelSortParm = sortOrder == "model" ? "model_desc" : "model";
+            ViewBag.WheelSortParm = sortOrder == "wheel_desc" ? "wheel" : "wheel_desc";
+            var order = from s in _context.ParkedVehicle
                            select s;
             switch (sortOrder)
             {
                 case "type":
-                    students = students.OrderByDescending(s => s.VehicleType);
+                    order = order.OrderByDescending(s => s.VehicleType);
                     break;
-                case "Date":
-                    students = students.OrderByDescending(s => s.RegistrationNumber);
+                case "reg":
+                    order = order.OrderBy(s => s.RegistrationNumber);
                     break;
-                //case "date_desc":
-                //    students = students.OrderByDescending(s => s.EnrollmentDate);
-                //    break;
+                case "reg_desc":
+                    order = order.OrderByDescending(s => s.RegistrationNumber);
+                    break;
+                case "color":
+                    order = order.OrderBy(s => s.Color);
+                    break;
+                case "color_desc":
+                    order = order.OrderByDescending(s => s.Color);
+                    break;
+                case "brand":
+                    order = order.OrderBy(s => s.Brand);
+                    break;
+                case "brand_desc":
+                    order = order.OrderByDescending(s => s.Brand);
+                    break;
+                case "model":
+                    order = order.OrderBy(s => s.VehicleModel);
+                    break;
+                case "model_desc":
+                    order = order.OrderByDescending(s => s.VehicleModel);
+                    break;
+                case "wheel":
+                    order = order.OrderBy(s => s.Wheel);
+                    break;
+                case "wheel_desc":
+                    order = order.OrderByDescending(s => s.Wheel);
+                    break;
                 default:
-                    students = students.OrderBy(s => s.VehicleType);
+                    order = order.OrderBy(s => s.VehicleType);
                     break;
             }
-            return View(await students.ToListAsync());
+            return View(await order.ToListAsync());
 
             //return View(await _context.ParkedVehicle.ToListAsync());
         }
