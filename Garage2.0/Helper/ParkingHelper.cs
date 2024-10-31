@@ -6,7 +6,18 @@
 
         public static string FormatTimeSpan(TimeSpan timeSpan)
         {
-            return $"{timeSpan.Days} days {timeSpan.Hours} hours {timeSpan.Minutes} minutes";
+            if (timeSpan.Days == 00 && timeSpan.Hours == 0)
+            {
+                return $"{timeSpan.Minutes} minutes";
+            } 
+            else if (timeSpan.Days == 0)
+            {
+                return $"{timeSpan.Hours} hours {timeSpan.Minutes} minutes";
+            }
+            else
+            {
+                return $"{timeSpan.Days} days {timeSpan.Hours} hours {timeSpan.Minutes} minutes";
+            }
         }
 
         public static decimal ParkingFee(DateTime arrival, DateTime departure)

@@ -44,7 +44,7 @@
             </td>
 
             <td>
-                 @item.ParkedTime.ToString(@"hh\:mm")
+                @ParkingHelper.FormatTimeSpan(item.ParkedTime)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -25,31 +25,31 @@ namespace Garage2._0.Controllers
             _context = context;
         }
 
-        // GET: ParkedVehicles
+        //GET: ParkedVehicles
         public async Task<IActionResult> Index(string sortOrder)
         {
-            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "type" : "";
-            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
-            var students = from s in _context.ParkedVehicle
-                           select s;
-            switch (sortOrder)
-            {
-                case "type":
-                    students = students.OrderByDescending(s => s.VehicleType);
-                    break;
-                case "Date":
-                    students = students.OrderBy(s => s.RegistrationNumber);
-                    break;
-                //case "date_desc":
-                //    students = students.OrderByDescending(s => s.EnrollmentDate);
-                //    break;
-                default:
-                    students = students.OrderBy(s => s.VehicleType);
-                    break;
-            }
-            return View(await students.ToListAsync());
+            //ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "type" : "";
+            //ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            //var students = from s in _context.ParkedVehicle
+            //               select s;
+            //switch (sortOrder)
+            //{
+            //    case "type":
+            //        students = students.OrderByDescending(s => s.VehicleType);
+            //        break;
+            //    case "Date":
+            //        students = students.OrderBy(s => s.RegistrationNumber);
+            //        break;
+            //    //case "date_desc":
+            //    //    students = students.OrderByDescending(s => s.EnrollmentDate);
+            //    //    break;
+            //    default:
+            //        students = students.OrderBy(s => s.VehicleType);
+            //        break;
+            //}
+            //return View(await students.ToListAsync());
 
-            //return View(await _context.ParkedVehicle.ToListAsync());
+            return View(await _context.ParkedVehicle.ToListAsync());
         }
 
         public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
@@ -135,6 +135,7 @@ namespace Garage2._0.Controllers
                     dateTime.Kind
                 );
                 parkedVehicle.ArrivalTime = dateTime;
+                parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
