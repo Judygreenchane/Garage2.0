@@ -38,6 +38,8 @@
         <input type="text" class="form-control" name="brand" placeholder="Brand..." />
         <input type="text" class="form-control" name="model" placeholder="Model..." />
         <input type="number" min="0" class="form-control" name="wheels" placeholder="Wheels..." />
+        <input type="date" class="form-control" name="arrivalTime" placeholder="Arrival Time..." />
+
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
@@ -66,7 +68,7 @@
                 @Html.ActionLink("Wheels", "Index", new { sortOrder = ViewBag.WheelSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
+                @Html.ActionLink("Arrival Time", "Index", new {sortOrder = ViewBag.ArrivalTimeSortParm })
             </th>
             <th></th>
         </tr>

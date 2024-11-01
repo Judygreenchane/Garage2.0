@@ -34,6 +34,7 @@ namespace Garage2._0.Controllers
             ViewBag.BrandSortParm = sortOrder == "brand" ? "brand_desc" : "brand";
             ViewBag.ModelSortParm = sortOrder == "model" ? "model_desc" : "model";
             ViewBag.WheelSortParm = sortOrder == "wheel_desc" ? "wheel" : "wheel_desc";
+            ViewBag.ArrivalTimeSortParm = sortOrder == "arrivalTime" ? "arrivalTime_desc" : "arrivalTime";
             var order = from s in _context.ParkedVehicle
                            select s;
             switch (sortOrder)
@@ -71,17 +72,22 @@ namespace Garage2._0.Controllers
                 case "wheel_desc":
                     order = order.OrderByDescending(s => s.Wheel);
                     break;
+                case "arrivalTime":
+                    order = order.OrderBy(s => s.ArrivalTime);
+                    break;
+                case "arrivalTime_desc":
+                    order = order.OrderByDescending(s => s.ArrivalTime);
+                    break;
                 default:
                     order = order.OrderBy(s => s.VehicleType);
                     break;
             }
             return View(await order.ToListAsync());
-
-            //return View(await _context.ParkedVehicle.ToListAsync());
         }
 
-        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
+        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels, DateTime arrivalTime)
         {
+           
             var filtered = type is null ?
                 _context.ParkedVehicle :
                 _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
@@ -106,8 +112,11 @@ namespace Garage2._0.Controllers
                 filtered :
                 filtered.Where(m => (int)m.Wheel == wheels);
 
+            //filtered = string.IsNullOrWhiteSpace(Convert.ToString(arrivalTime)) ?
+            //filtered :
+            //filtered.Where(m => m.ArrivalTime.ToString().Contains(arrivalTime.ToString()));
 
-           return View(nameof(Index), await filtered.ToListAsync());
+            return View(nameof(Index), await filtered.ToListAsync());
         }
 
 
