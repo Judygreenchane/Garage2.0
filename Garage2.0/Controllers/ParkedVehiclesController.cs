@@ -308,7 +308,7 @@ namespace Garage2._0.Controllers
             
             Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Vehicle removed successfully.";
+            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
             return RedirectToAction(nameof(Index));
         }
 
