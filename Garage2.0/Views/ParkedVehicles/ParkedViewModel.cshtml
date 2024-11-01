@@ -18,8 +18,6 @@
             </select>
         </div>
         <input type="text" class="form-control" name="regNr" placeholder="Registration number..." />
-        <input type="text" class="form-control" name="regNr" placeholder="Arrival Time..." />
-        <input type="text" class="form-control" name="regNr" placeholder="Parked Time ..." />
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary">Search</button>
         </div>
@@ -30,11 +28,11 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Type)
+                @Html.ActionLink("Vehicle Type", "ParkedViewModel", new { sortOrder = ViewBag.TypeSortParm })
             </th>
 
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
+                @Html.ActionLink("Registration Number", "ParkedViewModel", new { sortOrder = ViewBag.RegSortParm })
             </th>
 
             <th>
@@ -44,7 +42,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.ParkedTime)
             </th>
-
+            <th></th>
         </tr>
     </thead>
     <tbody>

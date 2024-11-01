@@ -114,9 +114,19 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Filter2(int? type, string regNr)
         {
-            var filtered = type is null ?
-                _context.ParkedViewModel :
-                _context.ParkedViewModel.Where(m => (int)m.Type == type);
+            var filtered = _context.ParkedVehicle.Select(p => new ParkedViewModel
+            {
+                Id = p.Id,
+                Type = p.VehicleType,
+                RegistrationNumber = p.RegistrationNumber,
+                ArrivalTime = p.ArrivalTime,
+                ParkedTime = DateTime.Now - p.ArrivalTime
+
+            });
+
+             filtered = type is null ?
+                filtered :
+                filtered.Where(m => (int)m.Type == type);
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
@@ -126,8 +136,9 @@ namespace Garage2._0.Controllers
             return View(nameof(ParkedViewModel), await filtered.ToListAsync());
         }
 
-        public async Task<IActionResult> ParkedViewModel()
+        public async Task<IActionResult> ParkedViewModel(string sortOrder)
         {
+
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
             {
                 Id = p.Id,
@@ -138,8 +149,33 @@ namespace Garage2._0.Controllers
 
             });
 
-            return View( await model.ToListAsync());
+
+            ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
+            
+            var order = from s in model
+                        select s;
+            switch (sortOrder)
+            {
+                case "type":
+                    order = order.OrderByDescending(s => s.Type);
+                    break;
+                case "reg":
+                    order = order.OrderBy(s => s.RegistrationNumber);
+                    break;
+                case "reg_desc":
+                    order = order.OrderByDescending(s => s.RegistrationNumber);
+                    break;
+                default:
+                    order = order.OrderBy(s => s.Type);
+                    break;
+            }
+
+
+            return View(await order.ToListAsync());
         }
+
+
 
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
