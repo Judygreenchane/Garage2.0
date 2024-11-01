@@ -15,22 +15,26 @@ namespace Garage2._0.Validation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext? validationContext)
         {
-            if (value == null)
+            var vehicleIdProperty = validationContext.ObjectType.GetProperty("Id");
+            var vehicleId = vehicleIdProperty?.GetValue(validationContext.ObjectInstance, null) as int?;
+            if (value == null || vehicleId !=0)
                 return ValidationResult.Success;
+           else 
+            {
+                var registrationNumber = value.ToString();
 
-            var registrationNumber = value.ToString();
+                // Get the DbContext from the validation context
+                var dbContext = (DbContext)validationContext.GetService(_dbContextType);
 
-            // Get the DbContext from the validation context
-            var dbContext = (DbContext)validationContext!.GetService(_dbContextType)!;
+                if (dbContext == null)
+                    throw new InvalidOperationException("DbContext could not be obtained from validation context.");
 
-            if (dbContext == null)
-                throw new InvalidOperationException("DbContext could not be obtained from validation context.");
+                // Check if the registration number exists
+                var isDuplicate = dbContext.Set<ParkedVehicle>()
+                    .Any(v => v.RegistrationNumber == registrationNumber);
 
-            // Check if the registration number exists
-            var isDuplicate = dbContext.Set<ParkedVehicle>()
-                .Any(v => v.RegistrationNumber == registrationNumber);
-
-            return isDuplicate ? new ValidationResult("Registration number must be unique.") : ValidationResult.Success;
+                return isDuplicate ? new ValidationResult("Registration number must be unique.") : ValidationResult.Success;
+            }
         }
     }
 }
