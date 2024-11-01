@@ -13,7 +13,7 @@ namespace Garage2._0.Validation
             _dbContextType = dbContextType;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext? validationContext)
         {
             if (value == null)
                 return ValidationResult.Success;
@@ -21,7 +21,7 @@ namespace Garage2._0.Validation
             var registrationNumber = value.ToString();
 
             // Get the DbContext from the validation context
-            var dbContext = (DbContext)validationContext.GetService(_dbContextType);
+            var dbContext = (DbContext)validationContext!.GetService(_dbContextType)!;
 
             if (dbContext == null)
                 throw new InvalidOperationException("DbContext could not be obtained from validation context.");
