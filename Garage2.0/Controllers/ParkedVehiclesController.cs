@@ -88,19 +88,19 @@ namespace Garage2._0.Controllers
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
-                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
 
             filtered = string.IsNullOrWhiteSpace(color) ?
                 filtered :
-                filtered.Where(m => m.Color.Contains(color));
+                filtered.Where(m => m.Color!.Contains(color));
 
             filtered = string.IsNullOrWhiteSpace(brand) ?
                 filtered :
-                filtered.Where(m => m.Brand.Contains(brand));
+                filtered.Where(m => m.Brand!.Contains(brand));
 
             filtered = string.IsNullOrWhiteSpace(model) ?
                 filtered :
-                filtered.Where(m => m.VehicleModel.Contains(model));
+                filtered.Where(m => m.VehicleModel!.Contains(model));
 
             filtered = wheels is null ?
                 filtered :
@@ -130,7 +130,7 @@ namespace Garage2._0.Controllers
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
-                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
 
 
             return View(nameof(ParkedViewModel), await filtered.ToListAsync());
@@ -216,7 +216,10 @@ namespace Garage2._0.Controllers
                     dateTime.Kind
                 );
                 parkedVehicle.ArrivalTime = dateTime;
-                parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
+                if (parkedVehicle.RegistrationNumber != null)
+                {
+                    parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
+                }
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Vehicle parked successfully.";
@@ -308,7 +311,7 @@ namespace Garage2._0.Controllers
             
             Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Vehicle removed successfully.";
+            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
             return RedirectToAction(nameof(Index));
         }
 
