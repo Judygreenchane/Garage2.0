@@ -12,7 +12,6 @@ using Garage2._0.Models.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
-using Garage2._0.Helper;
 
 namespace Garage2._0.Controllers
 {
@@ -94,19 +93,19 @@ namespace Garage2._0.Controllers
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
-                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
 
             filtered = string.IsNullOrWhiteSpace(color) ?
                 filtered :
-                filtered.Where(m => m.Color.Contains(color));
+                filtered.Where(m => m.Color!.Contains(color));
 
             filtered = string.IsNullOrWhiteSpace(brand) ?
                 filtered :
-                filtered.Where(m => m.Brand.Contains(brand));
+                filtered.Where(m => m.Brand!.Contains(brand));
 
             filtered = string.IsNullOrWhiteSpace(model) ?
                 filtered :
-                filtered.Where(m => m.VehicleModel.Contains(model));
+                filtered.Where(m => m.VehicleModel!.Contains(model));
 
             filtered = wheels is null ?
                 filtered :
@@ -118,8 +117,6 @@ namespace Garage2._0.Controllers
 
             return View(nameof(Index), await filtered.ToListAsync());
         }
-
-
 
         public async Task<IActionResult> Filter2(int? type, string regNr)
         {
@@ -139,7 +136,7 @@ namespace Garage2._0.Controllers
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
-                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
 
 
             return View(nameof(ParkedViewModel), await filtered.ToListAsync());
@@ -147,7 +144,6 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> ParkedViewModel(string sortOrder)
         {
-
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
             {
                 Id = p.Id,
@@ -157,7 +153,6 @@ namespace Garage2._0.Controllers
                 ParkedTime = DateTime.Now - p.ArrivalTime
 
             });
-
 
             ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
             ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
@@ -180,11 +175,8 @@ namespace Garage2._0.Controllers
                     break;
             }
 
-
             return View(await order.ToListAsync());
         }
-
-
 
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -225,7 +217,10 @@ namespace Garage2._0.Controllers
                     dateTime.Kind
                 );
                 parkedVehicle.ArrivalTime = dateTime;
-                parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
+                if (parkedVehicle.RegistrationNumber != null)
+                {
+                    parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
+                }
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Vehicle parked successfully.";
@@ -317,7 +312,7 @@ namespace Garage2._0.Controllers
             
             Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Vehicle removed successfully.";
+            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
             return RedirectToAction(nameof(Index));
         }
 
