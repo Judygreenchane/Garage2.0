@@ -10,51 +10,47 @@
 
 <div>
     <div id="print-this">
-    <h4>Receipt</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-4">
-            Registration Number
-        </dt>
-        <dd class = "col-sm-8">
-            @Html.DisplayFor(model => model.RegistrationNumber)
-        </dd>
-        <dt class = "col-sm-4">
-            Arrival Time
-        </dt>
-        <dd class = "col-sm-8">
-            @Html.DisplayFor(model => model.ArrivalTime)
-        </dd>
-        <dt class = "col-sm-4">
-            Departure Time
-        </dt>
-        <dd class = "col-sm-8">
-            @Html.DisplayFor(model => model.DepartureTime)
-        </dd>
-        <dt class = "col-sm-4">
-            Parked Time
-        </dt>
-        <dd class="col-sm-8">
-            @ParkingHelper.FormatTimeSpan(Model.ParkedTime)
-        </dd>
-        <dt class = "col-sm-4">
-            Parking Fee
-        </dt>
-        <dd class = "col-sm-8">
-            @($"{ParkingHelper.ParkingFee(Model.ArrivalTime, Model.DepartureTime)} SEK")
-        </dd>
-    </dl>
+        <h4>Receipt</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-4">
+                Registration Number
+            </dt>
+            <dd class = "col-sm-8">
+                @Html.DisplayFor(model => model.RegistrationNumber)
+            </dd>
+            <dt class = "col-sm-4">
+                Arrival Time
+            </dt>
+            <dd class = "col-sm-8">
+                @Html.DisplayFor(model => model.ArrivalTime)
+            </dd>
+            <dt class = "col-sm-4">
+                Departure Time
+            </dt>
+            <dd class = "col-sm-8">
+                @Html.DisplayFor(model => model.DepartureTime)
+            </dd>
+            <dt class = "col-sm-4">
+                Parked Time
+            </dt>
+            <dd class="col-sm-8">
+                @ParkingHelper.FormatTimeSpan(Model.ParkedTime)
+            </dd>
+            <dt class = "col-sm-4">
+                Parking Fee
+            </dt>
+            <dd class = "col-sm-8">
+                @($"{ParkingHelper.ParkingFee(Model.ArrivalTime, Model.DepartureTime)} SEK")
+            </dd>
+        </dl>
     </div>
-    
-
-    
     <form asp-action="Delete" asp-controller="ParkedVehicles" method="post">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Unpark" class="btn btn-danger" /> |
         <a asp-action="Index">Back to garage</a>
     </form>
 </div>
-
 
 <script>
     function generatePDF() {

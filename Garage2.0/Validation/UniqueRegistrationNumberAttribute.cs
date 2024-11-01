@@ -15,8 +15,8 @@ namespace Garage2._0.Validation
 
         protected override ValidationResult? IsValid(object? value, ValidationContext? validationContext)
         {
-            var vehicleIdProperty = validationContext.ObjectType.GetProperty("Id");
-            var vehicleId = vehicleIdProperty?.GetValue(validationContext.ObjectInstance, null) as int?;
+            var vehicleIdProperty = validationContext?.ObjectType.GetProperty("Id");
+            var vehicleId = vehicleIdProperty?.GetValue(validationContext?.ObjectInstance, null) as int?;
             if (value == null || vehicleId !=0)
                 return ValidationResult.Success;
            else 
@@ -24,7 +24,7 @@ namespace Garage2._0.Validation
                 var registrationNumber = value.ToString();
 
                 // Get the DbContext from the validation context
-                var dbContext = (DbContext)validationContext.GetService(_dbContextType);
+                var dbContext = (DbContext)validationContext?.GetService(_dbContextType)!;
 
                 if (dbContext == null)
                     throw new InvalidOperationException("DbContext could not be obtained from validation context.");
