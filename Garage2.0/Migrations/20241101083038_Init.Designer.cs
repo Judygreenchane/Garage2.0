@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage2._0.Migrations
 {
     [DbContext(typeof(Garage2_0Context))]
-    [Migration("20241031092135_AddedValidations")]
-    partial class AddedValidations
+    [Migration("20241101083038_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,7 @@ namespace Garage2._0.Migrations
                             Color = "Blue",
                             RegistrationNumber = "ERT987",
                             VehicleModel = "280s",
-                            VehicleType = 0,
+                            VehicleType = 3,
                             Wheel = 4
                         },
                         new
@@ -82,7 +82,7 @@ namespace Garage2._0.Migrations
                             Color = "Red",
                             RegistrationNumber = "KDR536",
                             VehicleModel = "142",
-                            VehicleType = 0,
+                            VehicleType = 3,
                             Wheel = 4
                         },
                         new
@@ -93,32 +93,9 @@ namespace Garage2._0.Migrations
                             Color = "Green",
                             RegistrationNumber = "LDT432",
                             VehicleModel = "CGI",
-                            VehicleType = 1,
+                            VehicleType = 4,
                             Wheel = 2
                         });
-                });
-
-            modelBuilder.Entity("Garage2._0.Models.Entities.ParkedViewModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("ArrivalTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RegistrationNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ParkedViewModel");
                 });
 #pragma warning restore 612, 618
         }
