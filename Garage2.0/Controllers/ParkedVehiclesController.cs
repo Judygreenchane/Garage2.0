@@ -166,6 +166,7 @@ namespace Garage2._0.Controllers
                 parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Vehicle parked successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(parkedVehicle);
@@ -205,6 +206,7 @@ namespace Garage2._0.Controllers
                 {
                     _context.Update(parkedVehicle);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Vehicle details updated successfully.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -253,7 +255,7 @@ namespace Garage2._0.Controllers
             
             Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
-            //TempData["SuccessMessage"] = "Product deleted successfully.";
+            TempData["SuccessMessage"] = "Vehicle removed successfully.";
             return RedirectToAction(nameof(Index));
         }
 
