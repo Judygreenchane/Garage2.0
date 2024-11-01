@@ -106,7 +106,24 @@ namespace Garage2._0.Controllers
                 filtered :
                 filtered.Where(m => (int)m.Wheel == wheels);
 
-            return View(nameof(Index), await filtered.ToListAsync());
+
+           return View(nameof(Index), await filtered.ToListAsync());
+        }
+
+
+
+        public async Task<IActionResult> Filter2(int? type, string regNr)
+        {
+            var filtered = type is null ?
+                _context.ParkedViewModel :
+                _context.ParkedViewModel.Where(m => (int)m.Type == type);
+
+            filtered = string.IsNullOrWhiteSpace(regNr) ?
+                filtered :
+                filtered.Where(m => m.RegistrationNumber.Contains(regNr));
+
+
+            return View(nameof(ParkedViewModel), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> ParkedViewModel()
@@ -121,7 +138,7 @@ namespace Garage2._0.Controllers
 
             });
 
-            return View(await model.ToListAsync());
+            return View( await model.ToListAsync());
         }
 
         // GET: ParkedVehicles/Details/5
