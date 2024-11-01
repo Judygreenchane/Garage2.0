@@ -6,46 +6,65 @@
 
 <h1>Checkout</h1>
 
-<h3>Are you sure you want to unpark this vehicle?</h3>
+<button class="btn btn-primary mb-sm-2" onclick="generatePDF()" id="PrintReceipt">Print Receipt</button>
+
 <div>
+    <div id="print-this">
     <h4>Receipt</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RegistrationNumber)
+        <dt class = "col-sm-4">
+            Registration Number
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.RegistrationNumber)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArrivalTime)
+        <dt class = "col-sm-4">
+            Arrival Time
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.ArrivalTime)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DepartureTime)
+        <dt class = "col-sm-4">
+            Departure Time
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.DepartureTime)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkedTime)
+        <dt class = "col-sm-4">
+            Parked Time
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @ParkingHelper.FormatTimeSpan(Model.ParkedTime)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ParkedFee)
+        <dt class = "col-sm-4">
+            Parking Fee
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @($"{ParkingHelper.ParkingFee(Model.ArrivalTime, Model.DepartureTime)} SEK")
         </dd>
     </dl>
+    </div>
+    
+
     
     <form asp-action="Delete" asp-controller="ParkedVehicles" method="post">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Unpark" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to Vehicles</a>
+        <a asp-action="Index">Back to garage</a>
     </form>
 </div>
+
+
+<script>
+    function generatePDF() {
+        const elementToPrint = document.getElementById('print-this');
+        html2pdf(elementToPrint, {
+            margin: 1,
+            filename: 'kvitto.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        });
+    }
+</script>

@@ -8,7 +8,7 @@ namespace Garage2._0.Models.Entities
         public VehicleType Type { get; set; }
 
         [DisplayName("Registration Number")]
-        public string RegistrationNumber { get; set; }
+        public string? RegistrationNumber { get; set; }
         public DateTime ArrivalTime { get; set; }
 
         [DisplayName("Parked Time")]

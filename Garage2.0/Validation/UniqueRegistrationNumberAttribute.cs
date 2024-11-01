@@ -13,7 +13,7 @@ namespace Garage2._0.Validation
             _dbContextType = dbContextType;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext? validationContext)
         {
             var vehicleIdProperty = validationContext.ObjectType.GetProperty("Id");
             var vehicleId = vehicleIdProperty?.GetValue(validationContext.ObjectInstance, null) as int?;
@@ -35,9 +35,6 @@ namespace Garage2._0.Validation
 
                 return isDuplicate ? new ValidationResult("Registration number must be unique.") : ValidationResult.Success;
             }
-           
-
-
         }
     }
 }
