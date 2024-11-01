@@ -12,7 +12,6 @@ using Garage2._0.Models.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
-using Garage2._0.Helper;
 
 namespace Garage2._0.Controllers
 {
@@ -76,8 +75,6 @@ namespace Garage2._0.Controllers
                     break;
             }
             return View(await order.ToListAsync());
-
-            //return View(await _context.ParkedVehicle.ToListAsync());
         }
 
         public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
@@ -110,8 +107,6 @@ namespace Garage2._0.Controllers
            return View(nameof(Index), await filtered.ToListAsync());
         }
 
-
-
         public async Task<IActionResult> Filter2(int? type, string regNr)
         {
             var filtered = _context.ParkedVehicle.Select(p => new ParkedViewModel
@@ -138,7 +133,6 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> ParkedViewModel(string sortOrder)
         {
-
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
             {
                 Id = p.Id,
@@ -148,7 +142,6 @@ namespace Garage2._0.Controllers
                 ParkedTime = DateTime.Now - p.ArrivalTime
 
             });
-
 
             ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
             ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
@@ -171,11 +164,8 @@ namespace Garage2._0.Controllers
                     break;
             }
 
-
             return View(await order.ToListAsync());
         }
-
-
 
         // GET: ParkedVehicles/Details/5
         public async Task<IActionResult> Details(int? id)
