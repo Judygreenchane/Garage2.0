@@ -17,14 +17,23 @@ namespace Garage2._0.Validation
         {
             var vehicleIdProperty = validationContext?.ObjectType.GetProperty("Id");
             var vehicleId = vehicleIdProperty?.GetValue(validationContext?.ObjectInstance, null) as int?;
-            if (value == null || vehicleId !=0)
+            var dbContext = (DbContext)validationContext?.GetService(_dbContextType)!;
+            
+            if (value == null)
                 return ValidationResult.Success;
-           else 
+           
+            else if(vehicleId != 0)
+            {
+                var isDuplicate = dbContext.Set<ParkedVehicle>()
+                    .Any(v => v.RegistrationNumber == value.ToString() && (v.Id!=vehicleId));
+                return isDuplicate ? new ValidationResult("Registration number must be unique.") : ValidationResult.Success;
+            }
+            
+            else 
             {
                 var registrationNumber = value.ToString();
 
                 // Get the DbContext from the validation context
-                var dbContext = (DbContext)validationContext?.GetService(_dbContextType)!;
 
                 if (dbContext == null)
                     throw new InvalidOperationException("DbContext could not be obtained from validation context.");
