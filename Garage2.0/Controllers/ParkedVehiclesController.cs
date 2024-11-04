@@ -12,6 +12,7 @@ using Garage2._0.Models.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Garage2._0.Controllers
 {
@@ -115,7 +116,11 @@ namespace Garage2._0.Controllers
             filtered :
             filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
 
-            return View(nameof(Index), await filtered.ToListAsync());
+            if (filtered.IsNullOrEmpty())
+            {
+                TempData["errorMessage"] = "Vehicle not found.";
+            }
+            return View(nameof(Index), await filtered!.ToListAsync());
         }
 
         public async Task<IActionResult> Filter2(int? type, string regNr)
