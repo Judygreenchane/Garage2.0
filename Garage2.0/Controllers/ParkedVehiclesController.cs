@@ -14,6 +14,7 @@ using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Garage2._0.Helper;
 
 namespace Garage2._0.Controllers
 {
@@ -153,29 +154,54 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> StatisticsView()
         {
-            int Id;
-
             var parkedVehicles = _context.ParkedVehicle.Select(p => new StatisticsViewModel
             {
-                Id = p.Id,
                 Wheel = p.Wheel,
                 Color = p.Color,
                 Brand = p.Brand,
                 Model = p.VehicleModel,
-                Type = p.VehicleType
-
+                Type = p.VehicleType,
+                ParkingFee = ParkingHelper.ParkingFee(p.ArrivalTime, DateTime.Now)
             });
 
-            var test = parkedVehicles.GroupBy(p => p.Type);
-
-
-            if (parkedVehicles == null)
+            var type = parkedVehicles.GroupBy(p => p.Type);
+            string cars = "0";
+            string boats = "0";
+            string motorcycles = "0";
+            string buses = "0";
+            string airplanes = "0";
+            foreach (var t in type)
             {
-                return NotFound();
+                if (t.Key == VehicleType.Car)
+                    cars = $"{t.Count()}";
+                else if (t.Key == VehicleType.Boat)
+                    boats = $"{t.Count()}";
+                else if (t.Key == VehicleType.Motorcycle)
+                    motorcycles = $"{t.Count()}";
+                else if (t.Key == VehicleType.Bus)
+                    buses = $"{t.Count()}";
+                else
+                    airplanes = $"{t.Count()}";
+            }
+            int amountWheels = parkedVehicles.Sum(s => s.Wheel);
+            decimal sum = 0;
+            foreach (var s in parkedVehicles)
+            {
+                sum += s.ParkingFee;
             }
 
-            return View(parkedVehicles);
+            var displayStats = new StatisticsDisplayViewModel
+            {
+                Cars = cars,
+                Boats = boats,
+                Buses = buses,
+                Motorcycles = motorcycles,
+                Airplanes = airplanes,
+                Wheels = amountWheels,
+                Sum = sum
+            };
 
+            return View(displayStats);
         }
 
         public async Task<IActionResult> ParkedViewModel(string sortOrder)
