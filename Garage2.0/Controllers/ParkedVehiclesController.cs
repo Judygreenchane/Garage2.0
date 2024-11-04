@@ -111,9 +111,9 @@ namespace Garage2._0.Controllers
                 filtered :
                 filtered.Where(m => (int)m.Wheel == wheels);
 
-            //filtered = string.IsNullOrWhiteSpace(Convert.ToString(arrivalTime)) ?
-            //filtered :
-            //filtered.Where(m => m.ArrivalTime.ToString().Contains(arrivalTime.ToString()));
+            filtered = arrivalTime == new DateTime (0001, 01, 01, 00, 00, 00) ?
+            filtered :
+            filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
 
             return View(nameof(Index), await filtered.ToListAsync());
         }
