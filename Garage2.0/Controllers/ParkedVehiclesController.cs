@@ -160,7 +160,7 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> StatisticsView()
         {
-            var parkedVehicles = _context.ParkedVehicle.Select(p => new StatisticsViewModel
+            var parkedVehicles = await _context.ParkedVehicle.Select(p => new StatisticsViewModel
             {
                 Wheel = p.Wheel,
                 Color = p.Color,
@@ -168,7 +168,8 @@ namespace Garage2._0.Controllers
                 Model = p.VehicleModel,
                 Type = p.VehicleType,
                 ParkingFee = ParkingHelper.ParkingFee(p.ArrivalTime, DateTime.Now)
-            });
+            })
+            .ToListAsync();
 
             var type = parkedVehicles.GroupBy(p => p.Type);
             string cars = "0";
@@ -406,15 +407,17 @@ namespace Garage2._0.Controllers
             {
                 return NotFound();
             }
-            
+
+            DateTime timeNow = DateTime.Now;
+            DateTime arrivalTime = parkedVehicle.ArrivalTime;
+
             var model = new ReceiptViewModel{ 
                 Id=parkedVehicle.Id,
-                RegistrationNumber=parkedVehicle.RegistrationNumber,
-                ArrivalTime=parkedVehicle.ArrivalTime,
-                DepartureTime=DateTime.Now,
-                ParkedTime=(DateTime.Now-parkedVehicle.ArrivalTime),
-                ParkedFee= (decimal)((DateTime.Now - parkedVehicle.ArrivalTime).TotalMinutes * 0.5)
-
+                RegistrationNumber = parkedVehicle.RegistrationNumber,
+                ArrivalTime = arrivalTime,
+                DepartureTime = timeNow,
+                ParkedTime = (timeNow-arrivalTime),
+                ParkedFee = ParkingHelper.ParkingFee(arrivalTime, timeNow)
             };
 
             return View(model);
