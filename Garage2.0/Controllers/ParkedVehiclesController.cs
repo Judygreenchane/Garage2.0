@@ -33,6 +33,7 @@ namespace Garage2._0.Controllers
             ViewBag.BrandSortParm = sortOrder == "brand" ? "brand_desc" : "brand";
             ViewBag.ModelSortParm = sortOrder == "model" ? "model_desc" : "model";
             ViewBag.WheelSortParm = sortOrder == "wheel_desc" ? "wheel" : "wheel_desc";
+            ViewBag.ArrivalTimeSortParm = sortOrder == "arrivalTime" ? "arrivalTime_desc" : "arrivalTime";
             var order = from s in _context.ParkedVehicle
                            select s;
             switch (sortOrder)
@@ -70,6 +71,12 @@ namespace Garage2._0.Controllers
                 case "wheel_desc":
                     order = order.OrderByDescending(s => s.Wheel);
                     break;
+                case "arrivalTime":
+                    order = order.OrderBy(s => s.ArrivalTime);
+                    break;
+                case "arrivalTime_desc":
+                    order = order.OrderByDescending(s => s.ArrivalTime);
+                    break;
                 default:
                     order = order.OrderBy(s => s.VehicleType);
                     break;
@@ -77,8 +84,9 @@ namespace Garage2._0.Controllers
             return View(await order.ToListAsync());
         }
 
-        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels)
+        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels, DateTime arrivalTime)
         {
+           
             var filtered = type is null ?
                 _context.ParkedVehicle :
                 _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
@@ -103,8 +111,11 @@ namespace Garage2._0.Controllers
                 filtered :
                 filtered.Where(m => (int)m.Wheel == wheels);
 
+            filtered = arrivalTime == new DateTime (0001, 01, 01, 00, 00, 00) ?
+            filtered :
+            filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
 
-           return View(nameof(Index), await filtered.ToListAsync());
+            return View(nameof(Index), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> Filter2(int? type, string regNr)
