@@ -13,6 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using Humanizer.Localisation;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Garage2._0.Controllers
 {
@@ -148,6 +149,33 @@ namespace Garage2._0.Controllers
                 filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
 
             return View(nameof(ParkedViewModel), await filtered.ToListAsync());
+        }
+
+        public async Task<IActionResult> StatisticsView()
+        {
+            int Id;
+
+            var parkedVehicles = _context.ParkedVehicle.Select(p => new StatisticsViewModel
+            {
+                Id = p.Id,
+                Wheel = p.Wheel,
+                Color = p.Color,
+                Brand = p.Brand,
+                Model = p.VehicleModel,
+                Type = p.VehicleType
+
+            });
+
+            var test = parkedVehicles.GroupBy(p => p.Type);
+
+
+            if (parkedVehicles == null)
+            {
+                return NotFound();
+            }
+
+            return View(parkedVehicles);
+
         }
 
         public async Task<IActionResult> ParkedViewModel(string sortOrder)
