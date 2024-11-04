@@ -8,6 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Garage2._0.Data;
 using Garage2._0.Models;
 using Garage2._0.Models.Entities;
+using Garage2._0.Models.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Humanizer.Localisation;
+using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Garage2._0.Controllers
 {
@@ -20,10 +25,172 @@ namespace Garage2._0.Controllers
             _context = context;
         }
 
-        // GET: ParkedVehicles
-        public async Task<IActionResult> Index()
+        //GET: ParkedVehicles
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            return View(await _context.ParkedVehicle.ToListAsync());
+            ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
+            ViewBag.ColorSortParm = sortOrder == "color" ? "color_desc" : "color";
+            ViewBag.BrandSortParm = sortOrder == "brand" ? "brand_desc" : "brand";
+            ViewBag.ModelSortParm = sortOrder == "model" ? "model_desc" : "model";
+            ViewBag.WheelSortParm = sortOrder == "wheel_desc" ? "wheel" : "wheel_desc";
+            ViewBag.ArrivalTimeSortParm = sortOrder == "arrivalTime_desc" ? "arrivalTime" : "arrivalTime_desc";
+            var order = from s in _context.ParkedVehicle
+                           select s;
+            switch (sortOrder)
+            {
+                case "type":
+                    order = order.OrderByDescending(s => s.VehicleType);
+                    break;
+                case "reg":
+                    order = order.OrderBy(s => s.RegistrationNumber);
+                    break;
+                case "reg_desc":
+                    order = order.OrderByDescending(s => s.RegistrationNumber);
+                    break;
+                case "color":
+                    order = order.OrderBy(s => s.Color);
+                    break;
+                case "color_desc":
+                    order = order.OrderByDescending(s => s.Color);
+                    break;
+                case "brand":
+                    order = order.OrderBy(s => s.Brand);
+                    break;
+                case "brand_desc":
+                    order = order.OrderByDescending(s => s.Brand);
+                    break;
+                case "model":
+                    order = order.OrderBy(s => s.VehicleModel);
+                    break;
+                case "model_desc":
+                    order = order.OrderByDescending(s => s.VehicleModel);
+                    break;
+                case "wheel":
+                    order = order.OrderBy(s => s.Wheel);
+                    break;
+                case "wheel_desc":
+                    order = order.OrderByDescending(s => s.Wheel);
+                    break;
+                case "arrivalTime":
+                    order = order.OrderBy(s => s.ArrivalTime);
+                    break;
+                case "arrivalTime_desc":
+                    order = order.OrderByDescending(s => s.ArrivalTime);
+                    break;
+                default:
+                    order = order.OrderBy(s => s.VehicleType);
+                    break;
+            }
+            return View(await order.ToListAsync());
+        }
+
+        public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels, DateTime arrivalTime)
+        {
+           
+            var filtered = type is null ?
+                _context.ParkedVehicle :
+                _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
+
+            filtered = string.IsNullOrWhiteSpace(regNr) ?
+                filtered :
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
+
+            filtered = string.IsNullOrWhiteSpace(color) ?
+                filtered :
+                filtered.Where(m => m.Color!.Contains(color));
+
+            filtered = string.IsNullOrWhiteSpace(brand) ?
+                filtered :
+                filtered.Where(m => m.Brand!.Contains(brand));
+
+            filtered = string.IsNullOrWhiteSpace(model) ?
+                filtered :
+                filtered.Where(m => m.VehicleModel!.Contains(model));
+
+            filtered = wheels is null ?
+                filtered :
+                filtered.Where(m => (int)m.Wheel == wheels);
+
+            filtered = arrivalTime == new DateTime (0001, 01, 01, 00, 00, 00) ?
+            filtered :
+            filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
+
+            if (filtered.IsNullOrEmpty())
+            {
+                TempData["errorMessage"] = "Vehicle not found.";
+            }
+            return View(nameof(Index), await filtered!.ToListAsync());
+        }
+
+        public async Task<IActionResult> Filter2(int? type, string regNr, DateTime arrivalTime)
+        {
+            var filtered = _context.ParkedVehicle.Select(p => new ParkedViewModel
+            {
+                Id = p.Id,
+                Type = p.VehicleType,
+                RegistrationNumber = p.RegistrationNumber,
+                ArrivalTime = p.ArrivalTime,
+                ParkedTime = DateTime.Now - p.ArrivalTime
+
+            });
+
+             filtered = type is null ?
+                filtered :
+                filtered.Where(m => (int)m.Type == type);
+
+            filtered = string.IsNullOrWhiteSpace(regNr) ?
+                filtered :
+                filtered.Where(m => m.RegistrationNumber!.Contains(regNr));
+
+            filtered = arrivalTime == new DateTime(0001, 01, 01, 00, 00, 00) ?
+                filtered :
+                filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
+
+            return View(nameof(ParkedViewModel), await filtered.ToListAsync());
+        }
+
+        public async Task<IActionResult> ParkedViewModel(string sortOrder)
+        {
+            var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
+            {
+                Id = p.Id,
+                Type = p.VehicleType,
+                RegistrationNumber = p.RegistrationNumber,
+                ArrivalTime = p.ArrivalTime,
+                ParkedTime = DateTime.Now - p.ArrivalTime
+
+            });
+
+            ViewBag.TypeSortParm = string.IsNullOrEmpty(sortOrder) ? "type" : "";
+            ViewBag.RegSortParm = sortOrder == "reg" ? "reg_desc" : "reg";
+            ViewBag.ArrivalTimeSortParm = sortOrder == "arrivalTime_desc" ? "arrivalTime" : "arrivalTime_desc";
+
+            var order = from s in model
+                        select s;
+            switch (sortOrder)
+            {
+                case "type":
+                    order = order.OrderByDescending(s => s.Type);
+                    break;
+                case "reg":
+                    order = order.OrderBy(s => s.RegistrationNumber);
+                    break;
+                case "reg_desc":
+                    order = order.OrderByDescending(s => s.RegistrationNumber);
+                    break;
+                case "arrivalTime":
+                    order = order.OrderBy(s => s.ArrivalTime);
+                    break;
+                case "arrivalTime_desc":
+                    order = order.OrderByDescending(s => s.ArrivalTime);
+                    break;
+                default:
+                    order = order.OrderBy(s => s.Type);
+                    break;
+            }
+
+            return View(await order.ToListAsync());
         }
 
         // GET: ParkedVehicles/Details/5
@@ -55,12 +222,23 @@ namespace Garage2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel,ArrivalTime")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
             {
+                DateTime dateTime = DateTime.Now;
+                dateTime = new DateTime(
+                    dateTime.Ticks - (dateTime.Ticks % TimeSpan.TicksPerSecond),
+                    dateTime.Kind
+                );
+                parkedVehicle.ArrivalTime = dateTime;
+                if (parkedVehicle.RegistrationNumber != null)
+                {
+                    parkedVehicle.RegistrationNumber = parkedVehicle.RegistrationNumber.ToUpper();
+                }
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Vehicle parked successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(parkedVehicle);
@@ -100,6 +278,7 @@ namespace Garage2._0.Controllers
                 {
                     _context.Update(parkedVehicle);
                     await _context.SaveChangesAsync();
+                    TempData["SuccessMessage"] = "Vehicle details updated successfully.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -145,9 +324,40 @@ namespace Garage2._0.Controllers
             {
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
-
+            
+            Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: ParkedVehicles/Receipt/5
+        public async Task<IActionResult> ReceiptView(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var parkedVehicle = await _context.ParkedVehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (parkedVehicle == null)
+            {
+                return NotFound();
+            }
+            
+            var model = new ReceiptViewModel{ 
+                Id=parkedVehicle.Id,
+                RegistrationNumber=parkedVehicle.RegistrationNumber,
+                ArrivalTime=parkedVehicle.ArrivalTime,
+                DepartureTime=DateTime.Now,
+                ParkedTime=(DateTime.Now-parkedVehicle.ArrivalTime),
+                ParkedFee= (decimal)((DateTime.Now - parkedVehicle.ArrivalTime).TotalMinutes * 0.5)
+
+            };
+
+            return View(model);
         }
 
         private bool ParkedVehicleExists(int id)

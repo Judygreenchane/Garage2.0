@@ -2,36 +2,73 @@
 
 @{
     ViewData["Title"] = "Index";
+    var successMessage = TempData["SuccessMessage"] as string;
+    var errorMessage = TempData["ErrorMessage"] as string;
 }
 
-<h1>Index</h1>
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+<h1>Garage</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Park new vehicle</a>
 </p>
+
+<form asp-action="Filter" method="get">
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <select class="form-control" name="type" asp-items="@Html.GetEnumSelectList<VehicleType>()">
+                <option selected="selected" value="">Any Vehicle</option>
+            </select>
+        </div>
+        <input type="text" class="form-control" name="regNr" placeholder="Registration number..." />
+        <input type="text" class="form-control" name="color" placeholder="Color..." />
+        <input type="text" class="form-control" name="brand" placeholder="Brand..." />
+        <input type="text" class="form-control" name="model" placeholder="Model..." />
+        <input type="number" min="0" class="form-control" name="wheels" placeholder="Wheels..." />
+        <input type="date" class="form-control" name="arrivalTime" placeholder="Arrival Time..." />
+
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
+                @Html.ActionLink("Vehicle Type", "Index", new { sortOrder = ViewBag.TypeSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RegistrationNumber)
+                @Html.ActionLink("Registration Number", "Index", new { sortOrder = ViewBag.RegSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Color)
+                @Html.ActionLink("Color", "Index", new { sortOrder = ViewBag.ColorSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.ActionLink("Brand", "Index", new { sortOrder = ViewBag.BrandSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VehicleModel)
+                @Html.ActionLink("Model", "Index", new { sortOrder = ViewBag.ModelSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Wheel)
+                @Html.ActionLink("Wheels", "Index", new { sortOrder = ViewBag.WheelSortParm })
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
+                @Html.ActionLink("Arrival Time", "Index", new {sortOrder = ViewBag.ArrivalTimeSortParm })
             </th>
             <th></th>
         </tr>
@@ -63,7 +100,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="ReceiptView" asp-route-id="@item.Id">Checkout</a>
             </td>
         </tr>
 }

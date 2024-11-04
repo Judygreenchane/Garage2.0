@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage2._0.Migrations
 {
     [DbContext(typeof(Garage2_0Context))]
-    [Migration("20241030102653_SeededVehicles")]
-    partial class SeededVehicles
+    [Migration("20241101083038_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,16 +37,20 @@ namespace Garage2._0.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Brand")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("RegistrationNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VehicleModel")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("VehicleType")
                         .HasColumnType("int");
@@ -67,7 +71,7 @@ namespace Garage2._0.Migrations
                             Color = "Blue",
                             RegistrationNumber = "ERT987",
                             VehicleModel = "280s",
-                            VehicleType = 0,
+                            VehicleType = 3,
                             Wheel = 4
                         },
                         new
@@ -78,7 +82,7 @@ namespace Garage2._0.Migrations
                             Color = "Red",
                             RegistrationNumber = "KDR536",
                             VehicleModel = "142",
-                            VehicleType = 0,
+                            VehicleType = 3,
                             Wheel = 4
                         },
                         new
@@ -89,7 +93,7 @@ namespace Garage2._0.Migrations
                             Color = "Green",
                             RegistrationNumber = "LDT432",
                             VehicleModel = "CGI",
-                            VehicleType = 1,
+                            VehicleType = 4,
                             Wheel = 2
                         });
                 });
