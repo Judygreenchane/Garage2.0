@@ -120,6 +120,7 @@ namespace Garage2._0.Controllers
             {
                 TempData["errorMessage"] = "Vehicle not found.";
             }
+
             return View(nameof(Index), await filtered!.ToListAsync());
         }
 
@@ -146,6 +147,11 @@ namespace Garage2._0.Controllers
             filtered = arrivalTime == new DateTime(0001, 01, 01, 00, 00, 00) ?
                 filtered :
                 filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
+
+            if (filtered.IsNullOrEmpty())
+            {
+                TempData["errorMessage"] = "Vehicle not found.";
+            }
 
             return View(nameof(ParkedViewModel), await filtered.ToListAsync());
         }
