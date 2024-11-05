@@ -388,8 +388,8 @@ namespace Garage2._0.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Overview));
             TempData["SuccessMessage"] = $"Vehicle {regId} checkout was successfull.";
+            return RedirectToAction(nameof(Overview));
         }
 
         // GET: ParkedVehicles/Receipt/5
