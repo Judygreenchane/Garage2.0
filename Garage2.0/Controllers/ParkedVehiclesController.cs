@@ -160,7 +160,7 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> StatisticsView()
         {
-            var parkedVehicles = _context.ParkedVehicle.Select(p => new StatisticsViewModel
+            var parkedVehicles = await _context.ParkedVehicle.Select(p => new StatisticsViewModel
             {
                 Wheel = p.Wheel,
                 Color = p.Color,
@@ -168,7 +168,8 @@ namespace Garage2._0.Controllers
                 Model = p.VehicleModel,
                 Type = p.VehicleType,
                 ParkingFee = ParkingHelper.ParkingFee(p.ArrivalTime, DateTime.Now)
-            });
+            })
+            .ToListAsync();
 
             var type = parkedVehicles.GroupBy(p => p.Type);
             string cars = "0";
@@ -298,7 +299,7 @@ namespace Garage2._0.Controllers
                 }
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Vehicle parked successfully.";
+                TempData["SuccessMessage"] = $"Vehicle {parkedVehicle.RegistrationNumber} parked successfully.";
                 return RedirectToAction(nameof(Overview));
             }
             return View(parkedVehicle);
@@ -338,7 +339,7 @@ namespace Garage2._0.Controllers
                 {
                     _context.Update(parkedVehicle);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Vehicle details updated successfully.";
+                    TempData["SuccessMessage"] = $"Vehicle details for {parkedVehicle.RegistrationNumber} updated successfully.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -380,15 +381,15 @@ namespace Garage2._0.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
+            string? regId = parkedVehicle?.RegistrationNumber;
             if (parkedVehicle != null)
             {
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
             
-            Console.WriteLine(nameof(Overview));
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
             return RedirectToAction(nameof(Overview));
+            TempData["SuccessMessage"] = $"Vehicle {regId} checkout was successfull.";
         }
 
         // GET: ParkedVehicles/Receipt/5
@@ -406,15 +407,17 @@ namespace Garage2._0.Controllers
             {
                 return NotFound();
             }
-            
+
+            DateTime timeNow = DateTime.Now;
+            DateTime arrivalTime = parkedVehicle.ArrivalTime;
+
             var model = new ReceiptViewModel{ 
                 Id=parkedVehicle.Id,
-                RegistrationNumber=parkedVehicle.RegistrationNumber,
-                ArrivalTime=parkedVehicle.ArrivalTime,
-                DepartureTime=DateTime.Now,
-                ParkedTime=(DateTime.Now-parkedVehicle.ArrivalTime),
-                ParkedFee= (decimal)((DateTime.Now - parkedVehicle.ArrivalTime).TotalMinutes * 0.5)
-
+                RegistrationNumber = parkedVehicle.RegistrationNumber,
+                ArrivalTime = arrivalTime,
+                DepartureTime = timeNow,
+                ParkedTime = (timeNow-arrivalTime),
+                ParkedFee = ParkingHelper.ParkingFee(arrivalTime, timeNow)
             };
 
             return View(model);

@@ -41,7 +41,7 @@
                 Parking Fee
             </dt>
             <dd class = "col-sm-8">
-                @($"{ParkingHelper.ParkingFee(Model.ArrivalTime, Model.DepartureTime)} SEK")
+                @Html.DisplayFor(model => model.ParkedFee)
             </dd>
         </dl>
     </div>
