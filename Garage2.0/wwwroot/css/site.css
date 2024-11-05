@@ -1,11 +1,5 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+body {
+    font-family: Inter,Calibri,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -20,6 +14,7 @@ html {
 body {
     position: relative;
     min-height: 100vh;
+    background-color: white;
 }
 
 .name-list {
@@ -28,6 +23,7 @@ body {
 }
 
 footer {
+    background-color: #5ec3ca !important;
     position: absolute;
     bottom: 0;
     height: 50px;
@@ -35,8 +31,48 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 
 footer div {
     width: auto !important;
+}
+
+nav a {
+    color: black !important;
+    padding-left: 20px;
+}
+
+.navbar-brand {
+    color: black !important;
+    padding-left: 20px;
+    font-size: 30px;
+}
+
+nav ul li a {
+    color: darkgrey !important;
+    font-size: 20px;
+}
+
+.navbar-nav {
+    justify-content: flex-end;
+}
+
+nav ul li {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.hover-button {
+    transition: 0.2s;
+}
+
+.hover-button:hover {
+    color: #5ec3ca !important;
+    transform: scale(1.1);
+    transition: 0.2s;
+}
+
+.active {
+    color: #5ec3ca !important;
 }
