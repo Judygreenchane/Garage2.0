@@ -1,8 +1,7 @@
-﻿@model IEnumerable<ParkedViewModel>
-
+﻿@model IEnumerable<Garage2._0.Models.Entities.ParkedViewModel>
 
 @{
-    ViewData["Title"] = "Garage";
+    ViewData["Title"] = "Overview";
     var successMessage = TempData["SuccessMessage"] as string;
     var errorMessage = TempData["ErrorMessage"] as string;
 }
@@ -24,7 +23,7 @@
 <h1>Overview</h1>
 
 <p>
-    <a asp-action="Create">Park New Vehicle</a>
+    <a asp-action="Park">Park New Vehicle</a>
 </p>
 
 <form asp-action="Filter2" method="get">

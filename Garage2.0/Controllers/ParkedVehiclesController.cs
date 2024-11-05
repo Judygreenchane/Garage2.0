@@ -123,7 +123,7 @@ namespace Garage2._0.Controllers
                 TempData["errorMessage"] = "Vehicle not found.";
             }
 
-            return View(nameof(Index), await filtered!.ToListAsync());
+            return View(nameof(Overview), await filtered!.ToListAsync());
         }
 
         public async Task<IActionResult> Filter2(int? type, string regNr, DateTime arrivalTime)
@@ -211,7 +211,7 @@ namespace Garage2._0.Controllers
             return View(displayStats);
         }
 
-        public async Task<IActionResult> ParkedViewModel(string sortOrder)
+        public async Task<IActionResult> Overview(string sortOrder)
         {
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
             {
@@ -272,18 +272,18 @@ namespace Garage2._0.Controllers
             return View(parkedVehicle);
         }
 
-        // GET: ParkedVehicles/Create
-        public IActionResult Create()
+        // GET: ParkedVehicles/Park
+        public IActionResult Park()
         {
             return View();
         }
 
-        // POST: ParkedVehicles/Create
+        // POST: ParkedVehicles/Park
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> Park([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
             {
@@ -300,7 +300,7 @@ namespace Garage2._0.Controllers
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = $"Vehicle {parkedVehicle.RegistrationNumber} parked successfully.";
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Overview));
             }
             return View(parkedVehicle);
         }
@@ -352,7 +352,7 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Overview));
             }
             return View(parkedVehicle);
         }
@@ -387,10 +387,9 @@ namespace Garage2._0.Controllers
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
             
-            Console.WriteLine(nameof(Index));
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Overview));
             TempData["SuccessMessage"] = $"Vehicle {regId} checkout was successfull.";
-            return RedirectToAction(nameof(Index));
         }
 
         // GET: ParkedVehicles/Receipt/5
