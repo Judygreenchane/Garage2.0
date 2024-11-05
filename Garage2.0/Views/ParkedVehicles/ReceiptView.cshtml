@@ -57,7 +57,7 @@
         const elementToPrint = document.getElementById('print-this');
         html2pdf(elementToPrint, {
             margin: 1,
-            filename: 'kvitto.pdf',
+            filename: 'receipt.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
