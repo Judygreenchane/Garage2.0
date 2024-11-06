@@ -18,18 +18,18 @@ namespace Garage2._0.Validation
             var vehicleIdProperty = validationContext?.ObjectType.GetProperty("Id");
             var vehicleId = vehicleIdProperty?.GetValue(validationContext?.ObjectInstance, null) as int?;
             var dbContext = (DbContext)validationContext?.GetService(_dbContextType)!;
-            
+
             if (value == null)
                 return ValidationResult.Success;
-           
-            else if(vehicleId != 0)
+
+            else if (vehicleId != 0)
             {
                 var isDuplicate = dbContext.Set<ParkedVehicle>()
-                    .Any(v => v.RegistrationNumber == value.ToString() && (v.Id!=vehicleId));
+                    .Any(v => v.RegistrationNumber == value.ToString() && (v.Id != vehicleId));
                 return isDuplicate ? new ValidationResult("Registration number must be unique.") : ValidationResult.Success;
             }
-            
-            else 
+
+            else
             {
                 var registrationNumber = value.ToString();
 
@@ -47,4 +47,3 @@ namespace Garage2._0.Validation
         }
     }
 }
-  

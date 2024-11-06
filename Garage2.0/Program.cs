@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Garage2._0.Data;
+﻿using Garage2._0.Data;
+using Microsoft.EntityFrameworkCore;
 namespace Garage2._0
 {
     public class Program
