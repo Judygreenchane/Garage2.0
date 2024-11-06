@@ -12,9 +12,12 @@ html {
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     position: relative;
     min-height: 100vh;
-    background-color: white;
+    background-color: #222831;
+    color: white;
 }
 
 .name-list {
@@ -23,7 +26,7 @@ body {
 }
 
 footer {
-    background-color: #5ec3ca !important;
+    background-color: #393E46 !important;
     position: absolute;
     bottom: 0;
     height: 50px;
@@ -38,13 +41,19 @@ footer div {
     width: auto !important;
 }
 
-nav a {
-    color: black !important;
-    padding-left: 20px;
+header {
+    width: 100%;
+    position: fixed;
+    top: 0px;
+}
+
+nav {
+    margin: 0px !important;
+    background-color: #393E46;
 }
 
 .navbar-brand {
-    color: black !important;
+    color: #00ADB5 !important;
     padding-left: 20px;
     font-size: 30px;
 }
@@ -68,11 +77,67 @@ nav ul li {
 }
 
 .hover-button:hover {
-    color: #5ec3ca !important;
+    color: #00ADB5 !important;
     transform: scale(1.1);
     transition: 0.2s;
 }
 
 .active {
-    color: #5ec3ca !important;
+    color: #00ADB5 !important;
+}
+
+.main-container {
+    height: 100%;
+    margin: auto;
+}
+
+.header h1 {
+    font-weight: 700;
+    font-size: 70px;
+    margin: 10px 0px;
+}
+
+.header p {
+    font-size: 20px;
+}
+
+.header ul {
+    margin: 50px 0px !important;
+    display: flex;
+    justify-content: center;
+}
+
+.header ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 20px;
+    width: 250px;
+    height: 150px;
+    border: 2px solid white;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 18px;
+    transition: 0.5s;
+}
+
+.header ul li:hover {
+    background-color: #00ADB5;
+    transition: 0.5s;
+}
+
+.header .regular-button {
+    display: inline-block;
+    padding: 20px;
+    border-radius: 20px;
+    margin: 0px 10px;
+    background-color: #00ADB5;
+    color: white;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.header .regular-button:hover {
+    transform: scale(1.1);
+    transition: 0.2s;
 }
