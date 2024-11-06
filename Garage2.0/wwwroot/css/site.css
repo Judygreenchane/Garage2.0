@@ -91,6 +91,18 @@ nav ul li {
     margin: auto;
 }
 
+.main-container main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container main h1 {
+    font-weight: 700;
+    font-size: 70px;
+}
+
 .header h1 {
     font-weight: 700;
     font-size: 70px;
@@ -126,7 +138,7 @@ nav ul li {
     transition: 0.5s;
 }
 
-.header .regular-button {
+.regular-button {
     display: inline-block;
     padding: 20px;
     border-radius: 20px;
@@ -137,7 +149,12 @@ nav ul li {
     transition: 0.2s;
 }
 
-.header .regular-button:hover {
+.regular-button:hover {
     transform: scale(1.1);
     transition: 0.2s;
+    color: white;
+}
+
+.overview-table {
+    background-color: #eeeeee;
 }
