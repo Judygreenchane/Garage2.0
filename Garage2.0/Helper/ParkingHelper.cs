@@ -1,6 +1,6 @@
 ﻿namespace Garage2._0.Helper
 {
-    public class ParkingHelper  
+    public class ParkingHelper
     {
         public const decimal ParkingRate = 0.5m; // Amount per minute
 
@@ -9,7 +9,7 @@
             if (timeSpan.Days == 00 && timeSpan.Hours == 0)
             {
                 return $"{timeSpan.Minutes} minutes";
-            } 
+            }
             else if (timeSpan.Days == 0)
             {
                 return $"{timeSpan.Hours} hours {timeSpan.Minutes} minutes";
@@ -22,7 +22,8 @@
 
         public static decimal ParkingFee(DateTime arrival, DateTime departure)
         {
-            decimal fee = Math.Round((decimal)(departure-arrival).TotalMinutes*ParkingRate, 2);
+            decimal Minutes = Math.Floor((decimal)((departure - arrival).TotalMinutes)) + 1;
+            decimal fee = Minutes * ParkingRate;
             return fee;
         }
     }
