@@ -7,7 +7,7 @@ namespace Garage2._0.Models.Entities
     public class ParkedVehicle
     {
         public int Id { get; set; }
-        [Required] 
+        [Required]
         public VehicleType VehicleType { get; set; }
         [Required]
         [RegularExpression(@"^[A-Za-z]{3}[0-9]{3}$", ErrorMessage = "Registration number must follow the format ABC123.")]

@@ -6,7 +6,7 @@
 
 <h1>Checkout</h1>
 
-<button class="btn btn-primary mb-sm-2" onclick="generatePDF()" id="PrintReceipt">Print Receipt</button>
+
 
 <div>
     <div id="print-this">
@@ -41,26 +41,46 @@
                 Parking Fee
             </dt>
             <dd class = "col-sm-8">
-                @Html.DisplayFor(model => model.ParkedFee)
+                @Html.DisplayFor(model => model.ParkedFee) <span>KR</span>
             </dd>
         </dl>
     </div>
-    <form asp-action="Delete" asp-controller="ParkedVehicles" method="post">
+
+     <form asp-action="Delete" asp-controller="ParkedVehicles" method="post" id="printAndUnparkForm">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Unpark" class="btn btn-danger" /> |
-        <a asp-action="Overview">Back to garage</a>
+        <input type="submit" value="Unpark" class="btn btn-danger" />
+        <button type="button" onclick="PrintAndUnpark()" class="btn btn-warning">Unpark and Print Receipt</button>
+        <a asp-action="Overview" class="btn btn-primary">Back to garage</a>
+       
     </form>
 </div>
 
 <script>
+
+    // Generate the PDF
     function generatePDF() {
         const elementToPrint = document.getElementById('print-this');
-        html2pdf(elementToPrint, {
+        
+        //Include timestamp in filename
+        const now = new Date();
+        const time = now.toISOString().replace(/[-:.]/g, "");
+        const filename = `receipt_${time}.pdf`;
+
+        return html2pdf(elementToPrint, {
             margin: 1,
-            filename: 'kvitto.pdf',
+            filename: filename,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
         });
     }
+
+    async function PrintAndUnpark() {
+        
+        await generatePDF();
+        
+        // Submit the form after PDF generation
+        document.getElementById('printAndUnparkForm').submit();
+    }
+	
 </script>

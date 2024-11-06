@@ -12,6 +12,6 @@ namespace Garage2._0.Models.Entities
         public DateTime ArrivalTime { get; set; }
 
         [DisplayName("Parked Time")]
-        public TimeSpan ParkedTime{ get; set; }
+        public TimeSpan ParkedTime { get; set; }
     }
 }

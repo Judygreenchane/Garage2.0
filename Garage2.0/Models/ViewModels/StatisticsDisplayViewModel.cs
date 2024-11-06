@@ -1,10 +1,8 @@
-﻿using Garage2._0.Models.Entities;
-
-namespace Garage2._0.Models.ViewModels
+﻿namespace Garage2._0.Models.ViewModels
 {
     public class StatisticsDisplayViewModel
     {
-        public string? Cars {  get; set; }
+        public string? Cars { get; set; }
         public string? Boats { get; set; }
         public string? Motorcycles { get; set; }
         public string? Buses { get; set; }
