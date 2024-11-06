@@ -145,7 +145,7 @@ namespace Garage2._0.Controllers
                 TempData["errorMessage"] = "Vehicle not found.";
             }
 
-            return View(nameof(ParkedViewModel), await filtered.ToListAsync());
+            return View(nameof(Overview), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> StatisticsView()
