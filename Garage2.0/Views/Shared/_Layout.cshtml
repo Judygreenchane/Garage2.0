@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Garage2.0</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Garage2._0.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Garage2.0</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -20,17 +20,14 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <li navigation-active-for ="Index" class="nav-item">
+                            <a class="nav-link hover-button @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        @* <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ParkedVehicles" asp-action="Index">Garage</a>
-                        </li> *@
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ParkedVehicles" asp-action="Overview">Overview</a>
+                        <li navigation-active-for="Overview" class="nav-item">
+                            <a class="nav-link hover-button @(ViewContext.RouteData.Values["Action"]?.ToString() == "Overview" ? "active" : "")" asp-area="" asp-controller="ParkedVehicles" asp-action="Overview">Overview</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ParkedVehicles" asp-action="StatisticsView">Stats</a>
+                        <li navigation-active-for="StatisticsView" class="nav-item">
+                            <a class="nav-link hover-button @(ViewContext.RouteData.Values["Action"]?.ToString() == "StatisticsView" ? "active" : "")" asp-area="" asp-controller="ParkedVehicles" asp-action="StatisticsView">Stats</a>
                         </li>
                     </ul>
                 </div>
@@ -38,17 +35,15 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container main-container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
-            &copy; 2024 - Garage2.0 - 
-                                      <a asp-area="" asp-controller="ParkedVehicles" asp-action="Overview">Overview</a>
-                                      <a asp-area="" asp-controller="ParkedVehicles" asp-action="StatisticsView">Stats</a>
+            &copy; 2024 - Garage2.0
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
