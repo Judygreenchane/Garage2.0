@@ -1,16 +1,16 @@
 ﻿@model Garage2._0.Models.Entities.ParkedVehicle
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Park";
 }
 
-<h1>Edit</h1>
+<h1>Park</h1>
 
+<h4>ParkedVehicle</h4>
 <hr />
 <div class="row">
-    <form asp-action="Edit">
+    <form asp-action="Park">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id" />
         <div class="form-group">
             <label asp-for="VehicleType" class="control-label">Vehicle Type</label>
             <select asp-for="VehicleType" class="form-control" asp-items="@Html.GetEnumSelectList<VehicleType>()">
@@ -20,42 +20,40 @@
         </div>
         <div class="form-group">
             <label asp-for="RegistrationNumber" class="control-label">Registration Number</label>
-            <input asp-for="RegistrationNumber" class="form-control" />
+            <input asp-for="RegistrationNumber" class="form-control" placeholder="ABC123..." />
             <span asp-validation-for="RegistrationNumber" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Color" class="control-label"></label>
-            <input asp-for="Color" class="form-control" />
+            <input asp-for="Color" class="form-control" placeholder="White..." />
             <span asp-validation-for="Color" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Brand" class="control-label"></label>
-            <input asp-for="Brand" class="form-control" />
+            <input asp-for="Brand" class="form-control" placeholder="Audi..." />
             <span asp-validation-for="Brand" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="VehicleModel" class="control-label">Vehicle Model</label>
-            <input asp-for="VehicleModel" class="form-control" />
+            <input asp-for="VehicleModel" class="form-control" placeholder="A6..." />
             <span asp-validation-for="VehicleModel" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Wheel" class="control-label">Wheels</label>
-            <input asp-for="Wheel" class="form-control" />
+            <input asp-for="Wheel" class="form-control" min="0" />
             <span asp-validation-for="Wheel" class="text-danger"></span>
         </div>
+        <br>
         <div class="form-group">
-            <label asp-for="ArrivalTime" class="control-label">Arrival Time</label>
-            <input asp-for="ArrivalTime" class="form-control" readonly/>
-            <span asp-validation-for="ArrivalTime" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="submit" value="Park" class="btn btn-primary" />
         </div>
     </form>
 </div>
 
 <div>
-    <a asp-action="Overview">Back to garage</a>
+    <a asp-action="Overview">Back to List</a>
 </div>
 
-
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

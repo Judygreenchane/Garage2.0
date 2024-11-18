@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Garage2._0.Data;
-using Garage2._0.Models;
+﻿using Garage2._0.Data;
+using Garage2._0.Helper;
 using Garage2._0.Models.Entities;
 using Garage2._0.Models.ViewModels;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Humanizer.Localisation;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Garage2._0.Helper;
 
 namespace Garage2._0.Controllers
 {
@@ -38,7 +28,7 @@ namespace Garage2._0.Controllers
             ViewBag.WheelSortParm = sortOrder == "wheel_desc" ? "wheel" : "wheel_desc";
             ViewBag.ArrivalTimeSortParm = sortOrder == "arrivalTime_desc" ? "arrivalTime" : "arrivalTime_desc";
             var order = from s in _context.ParkedVehicle
-                           select s;
+                        select s;
             switch (sortOrder)
             {
                 case "type":
@@ -89,7 +79,7 @@ namespace Garage2._0.Controllers
 
         public async Task<IActionResult> Filter(int? type, string regNr, string color, string brand, string model, int? wheels, DateTime arrivalTime)
         {
-           
+
             var filtered = type is null ?
                 _context.ParkedVehicle :
                 _context.ParkedVehicle.Where(m => (int)m.VehicleType == type);
@@ -114,7 +104,7 @@ namespace Garage2._0.Controllers
                 filtered :
                 filtered.Where(m => (int)m.Wheel == wheels);
 
-            filtered = arrivalTime == new DateTime (0001, 01, 01, 00, 00, 00) ?
+            filtered = arrivalTime == new DateTime(0001, 01, 01, 00, 00, 00) ?
             filtered :
             filtered.Where(m => m.ArrivalTime.Date == arrivalTime.Date);
 
@@ -123,7 +113,7 @@ namespace Garage2._0.Controllers
                 TempData["errorMessage"] = "Vehicle not found.";
             }
 
-            return View(nameof(Index), await filtered!.ToListAsync());
+            return View(nameof(Overview), await filtered!.ToListAsync());
         }
 
         public async Task<IActionResult> Filter2(int? type, string regNr, DateTime arrivalTime)
@@ -138,9 +128,9 @@ namespace Garage2._0.Controllers
 
             });
 
-             filtered = type is null ?
-                filtered :
-                filtered.Where(m => (int)m.Type == type);
+            filtered = type is null ?
+               filtered :
+               filtered.Where(m => (int)m.Type == type);
 
             filtered = string.IsNullOrWhiteSpace(regNr) ?
                 filtered :
@@ -155,12 +145,12 @@ namespace Garage2._0.Controllers
                 TempData["errorMessage"] = "Vehicle not found.";
             }
 
-            return View(nameof(ParkedViewModel), await filtered.ToListAsync());
+            return View(nameof(Overview), await filtered.ToListAsync());
         }
 
         public async Task<IActionResult> StatisticsView()
         {
-            var parkedVehicles = _context.ParkedVehicle.Select(p => new StatisticsViewModel
+            var parkedVehicles = await _context.ParkedVehicle.Select(p => new StatisticsViewModel
             {
                 Wheel = p.Wheel,
                 Color = p.Color,
@@ -168,7 +158,8 @@ namespace Garage2._0.Controllers
                 Model = p.VehicleModel,
                 Type = p.VehicleType,
                 ParkingFee = ParkingHelper.ParkingFee(p.ArrivalTime, DateTime.Now)
-            });
+            })
+            .ToListAsync();
 
             var type = parkedVehicles.GroupBy(p => p.Type);
             string cars = "0";
@@ -210,7 +201,7 @@ namespace Garage2._0.Controllers
             return View(displayStats);
         }
 
-        public async Task<IActionResult> ParkedViewModel(string sortOrder)
+        public async Task<IActionResult> Overview(string sortOrder)
         {
             var model = _context.ParkedVehicle.Select(p => new ParkedViewModel
             {
@@ -271,18 +262,18 @@ namespace Garage2._0.Controllers
             return View(parkedVehicle);
         }
 
-        // GET: ParkedVehicles/Create
-        public IActionResult Create()
+        // GET: ParkedVehicles/Park
+        public IActionResult Park()
         {
             return View();
         }
 
-        // POST: ParkedVehicles/Create
+        // POST: ParkedVehicles/Park
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel")] ParkedVehicle parkedVehicle)
+        public async Task<IActionResult> Park([Bind("Id,VehicleType,RegistrationNumber,Color,Brand,VehicleModel,Wheel")] ParkedVehicle parkedVehicle)
         {
             if (ModelState.IsValid)
             {
@@ -298,8 +289,8 @@ namespace Garage2._0.Controllers
                 }
                 _context.Add(parkedVehicle);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Vehicle parked successfully.";
-                return RedirectToAction(nameof(Index));
+                TempData["SuccessMessage"] = $"Vehicle {parkedVehicle.RegistrationNumber} successfully parked.";
+                return RedirectToAction(nameof(Overview));
             }
             return View(parkedVehicle);
         }
@@ -338,7 +329,7 @@ namespace Garage2._0.Controllers
                 {
                     _context.Update(parkedVehicle);
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Vehicle details updated successfully.";
+                    TempData["SuccessMessage"] = $"Vehicle details for {parkedVehicle.RegistrationNumber} updated.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -351,7 +342,7 @@ namespace Garage2._0.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Overview));
             }
             return View(parkedVehicle);
         }
@@ -380,15 +371,15 @@ namespace Garage2._0.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var parkedVehicle = await _context.ParkedVehicle.FindAsync(id);
+            string? regId = parkedVehicle?.RegistrationNumber;
             if (parkedVehicle != null)
             {
                 _context.ParkedVehicle.Remove(parkedVehicle);
             }
-            
-            Console.WriteLine(nameof(Index));
+
             await _context.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Vehicle checkout was successfull.";
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = $"Vehicle {regId} successfully unparked.";
+            return RedirectToAction(nameof(Overview));
         }
 
         // GET: ParkedVehicles/Receipt/5
@@ -406,15 +397,18 @@ namespace Garage2._0.Controllers
             {
                 return NotFound();
             }
-            
-            var model = new ReceiptViewModel{ 
-                Id=parkedVehicle.Id,
-                RegistrationNumber=parkedVehicle.RegistrationNumber,
-                ArrivalTime=parkedVehicle.ArrivalTime,
-                DepartureTime=DateTime.Now,
-                ParkedTime=(DateTime.Now-parkedVehicle.ArrivalTime),
-                ParkedFee= (decimal)((DateTime.Now - parkedVehicle.ArrivalTime).TotalMinutes * 0.5)
 
+            DateTime timeNow = DateTime.Now;
+            DateTime arrivalTime = parkedVehicle.ArrivalTime;
+
+            var model = new ReceiptViewModel
+            {
+                Id = parkedVehicle.Id,
+                RegistrationNumber = parkedVehicle.RegistrationNumber,
+                ArrivalTime = arrivalTime,
+                DepartureTime = timeNow,
+                ParkedTime = (timeNow - arrivalTime),
+                ParkedFee = ParkingHelper.ParkingFee(arrivalTime, timeNow)
             };
 
             return View(model);
